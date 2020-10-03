@@ -1,0 +1,35 @@
+name: Test
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test-ssh-access:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Enable experimental features for the Docker daemon and CLI
+        run: |
+          echo $'{\n  "experimental": true\n}' | sudo tee /etc/docker/daemon.json
+          mkdir -p ~/.docker
+          echo $'{\n  "experimental": "enabled"\n}' | sudo tee ~/.docker/config.json
+          sudo service docker restart
+          docker version -f '{{.Client.Experimental}}'
+          docker version -f '{{.Server.Experimental}}'
+          docker buildx version
+      - uses: actions/checkout@v2
+      # Setup the ssh-agent
+      - uses: webfactory/ssh-agent@v0.4.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      # NOTE: The above action does this too but the file is at ~/.ssh/known_hosts
+      # and there's no way of knowing if the path changed
+      - name: Setup known_hosts
+        run: ssh-keyscan github.com > ./known_hosts
+      # Build and test ssh access inside Docker images
+      - name: Build the priv-repo image
+        run: docker buildx bake priv-repo
+      - name: Build the main image
+        run: docker buildx bake
