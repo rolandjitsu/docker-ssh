@@ -33,3 +33,5 @@ jobs:
         run: docker buildx bake priv-repo
       - name: Build the main image
         run: docker buildx bake
+      - name: Check private repo contents
+        run: cat ./priv-code/noop.txt
