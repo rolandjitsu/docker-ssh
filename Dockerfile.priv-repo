@@ -1,0 +1,16 @@
+# syntax = docker/dockerfile:1.1-experimental
+FROM alpine
+ARG PRIV_GIT_REPO
+
+RUN apk add --update --no-cache ca-certificates \
+  git \
+  openssh-client
+
+ENV PRIV_SOURCE_CODE /code
+
+RUN --mount=type=ssh \
+    --mount=type=secret,id=known_hosts,dst=/root/known_hosts \
+    mkdir -p -m 0700 /root/.ssh && \
+    cat /root/known_hosts >> /root/.ssh/known_hosts && \
+    git config --global url."git@github.com:".insteadOf "https://github.com/" && \
+    git clone $PRIV_GIT_REPO $PRIV_SOURCE_CODE
