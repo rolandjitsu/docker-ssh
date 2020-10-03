@@ -1,6 +1,8 @@
 # Docker SSH
 > Access private repos when building Docker images.
 
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/rolandjitsu/docker-ssh/Test?label=tests&style=flat-square)](https://github.com/rolandjitsu/docker-ssh/actions?query=workflow%3ATest)
+
 Do note that this guide works only with Github, but with slight modifications it can easily be adapted to GitLab and others.
 
 ## Prerequisites

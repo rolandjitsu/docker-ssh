@@ -4,7 +4,8 @@ ARG PRIV_GIT_REPO
 
 RUN apk add --update --no-cache ca-certificates \
   git \
-  openssh-client
+  openssh-client \
+  rsync
 
 ENV PRIV_SOURCE_CODE /code
 
