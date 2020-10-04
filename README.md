@@ -66,3 +66,7 @@ Or build the image with bake:
 ```bash
 docker buildx bake
 ```
+
+## SSH Auth
+Note that the Github CI workflow is setup to use [deploy keys](https://github.com/webfactory/ssh-agent#authorizing-a-key) instead of [a user SSH key](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account).
+Read more about security in workflows at [security hardening for github actions](https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/security-hardening-for-github-actions).
