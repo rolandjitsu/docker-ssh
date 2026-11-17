@@ -13,7 +13,5 @@ RUN --mount=type=ssh \
     --mount=type=secret,id=known_hosts,dst=/root/known_hosts \
     mkdir -p -m 0700 /root/.ssh && \
     cat /root/known_hosts >> /root/.ssh/known_hosts && \
-    printf "Host github.com\n  StrictHostKeyChecking yes\n  PubkeyAcceptedKeyTypes +ssh-rsa\n" >> /root/.ssh/config && \
-    chmod 600 /root/.ssh/config && \
     git config --global url."git@github.com:".insteadOf "https://github.com/" && \
-    git clone $PRIV_GIT_REPO $PRIV_SOURCE_CODE
+    GIT_SSH_COMMAND="ssh -v" git clone $PRIV_GIT_REPO $PRIV_SOURCE_CODE
