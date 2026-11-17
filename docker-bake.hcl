@@ -7,11 +7,11 @@ variable "PRIV_GIT_REPO" {
 }
 
 variable "DEST" {
-	default = "./priv-code"
+  default = "./priv-code"
 }
 
 target "priv-repo" {
-  dockerfile  = "Dockerfile.priv-repo"
+  dockerfile = "Dockerfile.priv-repo"
   secret     = ["id=known_hosts,src=./known_hosts"]
   ssh        = ["default=${SSH_ID}"]
   tags       = ["priv-repo"]
@@ -21,6 +21,6 @@ target "priv-repo" {
 }
 
 target "default" {
-  dockerfile  = "Dockerfile"
+  dockerfile = "Dockerfile"
   output     = ["${DEST}"]
 }

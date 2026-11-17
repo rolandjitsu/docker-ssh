@@ -1,13 +1,13 @@
-# syntax = docker/dockerfile:1.1-experimental
-FROM alpine
+# syntax=docker/dockerfile:1
+FROM alpine:3.20
 ARG PRIV_GIT_REPO
 
-RUN apk add --update --no-cache ca-certificates \
+RUN apk add --no-cache ca-certificates \
   git \
   openssh-client \
   rsync
 
-ENV PRIV_SOURCE_CODE /code
+ENV PRIV_SOURCE_CODE=/code
 
 RUN --mount=type=ssh \
     --mount=type=secret,id=known_hosts,dst=/root/known_hosts \
