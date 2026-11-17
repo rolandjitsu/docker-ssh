@@ -55,6 +55,21 @@ Or build the image with bake:
 docker buildx bake --allow=ssh
 ```
 
-## SSH Auth
-Note that the GitHub CI workflow is setup to use [deploy keys](https://github.com/webfactory/ssh-agent#authorizing-a-key) instead of [a user SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
-Read more about security in workflows at [security hardening for github actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions).
+## Security & Authentication
+
+### Security Posture
+* **Least Privilege**: Only the `priv-repo` target requests the SSH socket capability; downstream extraction and packaging targets do not.
+* **Ephemeral Socket Access**: BuildKit forwards the SSH agent socket only during the specific `RUN --mount=type=ssh` step. The socket is not accessible during subsequent build steps and is never persisted into image layers or metadata.
+* **Git Metadata Sanitization**: When exporting code, exclude the `.git/` folder (`rsync -av --exclude '.git'`) to prevent leaking commit histories, commit signatures, or origin URLs into output artifacts.
+* **Host Verification**: Mount a trusted `known_hosts` file via `--mount=type=secret` to guard against man-in-the-middle attacks.
+
+### Deploy Keys vs GitHub Apps
+* **Deploy Keys (SSH)**: This repository uses a deploy key scoped with read-only access to the private repository.
+  * Always use modern `ed25519` keys (`ssh-keygen -t ed25519`). Legacy SHA-1 RSA keys were deprecated and disabled by GitHub in March 2022.
+  * Deploy keys are repository-scoped and cannot be reused across multiple repositories.
+* **GitHub Apps (Recommended for Organizations)**: For organization-wide CI/CD pipelines, using a GitHub App with [actions/create-github-app-token](https://github.com/actions/create-github-app-token) and BuildKit secret mounts (`--mount=type=secret`) is the recommended modern approach:
+  * Generates short-lived installation tokens (1 hour lifetime) with automatic expiration.
+  * Can span multiple private dependencies across an organization without managing individual SSH keys.
+  * Provides fine-grained repository permissions and detailed audit log attribution.
+
+Read more about workflow security at [security hardening for github actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions).
