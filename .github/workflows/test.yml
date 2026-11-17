@@ -20,7 +20,12 @@ jobs:
       - name: Verify SSH connection to GitHub
         run: |
           ssh-add -l
-          ssh -Tv -o StrictHostKeyChecking=no git@github.com || true
+          out=$(ssh -T -o StrictHostKeyChecking=no git@github.com 2>&1 || true)
+          echo "$out"
+          if ! echo "$out" | grep -q "successfully authenticated"; then
+            echo "::error::SSH key is not recognized or authorized on GitHub. Verify that secrets.SSH_PRIVATE_KEY matches the deploy key on https://github.com/rolandjitsu/noop."
+            exit 1
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

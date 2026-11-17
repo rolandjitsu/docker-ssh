@@ -25,6 +25,5 @@ target "default" {
   contexts = {
     priv-repo = "target:priv-repo"
   }
-  ssh        = [SSH_ID != "" ? "default=${SSH_ID}" : "default"]
   output     = ["${DEST}"]
 }

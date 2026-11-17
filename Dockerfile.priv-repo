@@ -14,4 +14,4 @@ RUN --mount=type=ssh \
     mkdir -p -m 0700 /root/.ssh && \
     cat /root/known_hosts >> /root/.ssh/known_hosts && \
     git config --global url."git@github.com:".insteadOf "https://github.com/" && \
-    GIT_SSH_COMMAND="ssh -v" git clone $PRIV_GIT_REPO $PRIV_SOURCE_CODE
+    git clone $PRIV_GIT_REPO $PRIV_SOURCE_CODE
