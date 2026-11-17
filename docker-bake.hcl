@@ -13,7 +13,7 @@ variable "DEST" {
 target "priv-repo" {
   dockerfile = "Dockerfile.priv-repo"
   secret     = ["id=known_hosts,src=./known_hosts"]
-  ssh        = ["default=${SSH_ID}"]
+  ssh        = [SSH_ID != "" ? "default=${SSH_ID}" : "default"]
   tags       = ["priv-repo"]
   args       = {
     PRIV_GIT_REPO = "${PRIV_GIT_REPO}"
@@ -22,5 +22,8 @@ target "priv-repo" {
 
 target "default" {
   dockerfile = "Dockerfile"
+  contexts = {
+    priv-repo = "target:priv-repo"
+  }
   output     = ["${DEST}"]
 }
