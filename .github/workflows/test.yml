@@ -24,7 +24,7 @@ jobs:
         run: ssh-keyscan -t ed25519,ecdsa,rsa github.com > ./known_hosts
 
       - name: Build and extract private repo contents
-        run: docker buildx bake
+        run: docker buildx bake --allow=ssh
 
       - name: Check private repo contents
         run: cat ./priv-code/noop.txt

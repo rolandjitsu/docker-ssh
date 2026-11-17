@@ -42,7 +42,7 @@ docker buildx build -f Dockerfile.priv-repo \
 
 Or build the base image with [bake](https://docs.docker.com/build/bake/):
 ```bash
-PRIV_GIT_REPO=<my private repo> docker buildx bake priv-repo
+PRIV_GIT_REPO=<my private repo> docker buildx bake --allow=ssh priv-repo
 ```
 
 Now build an image that just copies whatever was in the private repo to the host:
@@ -52,7 +52,7 @@ docker buildx build -f Dockerfile -o type=local,dest=./priv-code .
 
 Or build the image with bake:
 ```bash
-docker buildx bake
+docker buildx bake --allow=ssh
 ```
 
 ## SSH Auth
