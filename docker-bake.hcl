@@ -1,7 +1,3 @@
-variable "SSH_AUTH_SOCK" {
-  default = ""
-}
-
 variable "SSH_ID" {
   default = ""
 }
@@ -17,9 +13,7 @@ variable "DEST" {
 target "priv-repo" {
   dockerfile = "Dockerfile.priv-repo"
   secret     = ["id=known_hosts,src=./known_hosts"]
-  ssh        = [
-    SSH_AUTH_SOCK != "" ? "default=${SSH_AUTH_SOCK}" : (SSH_ID != "" ? "default=${SSH_ID}" : "default")
-  ]
+  ssh        = [SSH_ID != "" ? "default=${SSH_ID}" : "default"]
   tags       = ["priv-repo"]
   args       = {
     PRIV_GIT_REPO = "${PRIV_GIT_REPO}"
@@ -31,8 +25,6 @@ target "default" {
   contexts = {
     priv-repo = "target:priv-repo"
   }
-  ssh        = [
-    SSH_AUTH_SOCK != "" ? "default=${SSH_AUTH_SOCK}" : (SSH_ID != "" ? "default=${SSH_ID}" : "default")
-  ]
+  ssh        = [SSH_ID != "" ? "default=${SSH_ID}" : "default"]
   output     = ["${DEST}"]
 }
